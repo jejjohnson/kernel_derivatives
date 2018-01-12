@@ -15,7 +15,7 @@ $$
 
 where $w$ are the weights associated with $x$ points used to predict $\hat{y}$. This is the mean squared error. The unknown components of this equation, the weights $w$, can be solved using the following scheme:
 
-$$
+$$ep Learning in Remote Sensing: A Comprehensive Review and List of Resources
 w =
 $$
 
