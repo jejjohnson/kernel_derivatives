@@ -86,3 +86,122 @@ Any scalar is invariant under transposition such that:
 $$
 y^{\top}Xw = \left( y^{\top}X w \right)^{\top} = w^{\top}x^{\top}y
 $$
+
+
+---
+
+### Previous Notes
+
+
+The general regression problem:
+
+$$\mathcal{C} = \frac{1}{n} \sum \phi \left( y_i, f(x_i) \right) + \text{ penalty}(f)$$
+
+where:
+
+* $\phi$ is the estimation error 
+* penalty($f$) is the regularization term.
+
+Assume we have the following cost function for ridge regression where we have a regularization penalty (scaled by $\lambda$) added to the cost term like so ([1]):
+
+$$\mathcal{C} = \frac{1}{n} \sum_{i=1}^{n} \left( y_i - f(x_i) \right)^2 + \lambda ||f||^{2}_{\mathcal{H}}$$
+
+where:
+
+* $\alpha$ are the weights
+* $K$ is the kernel matrix
+* $\lambda$ is the trade off parameter between the regularization and the mean squared error.
+* $\Omega$ is the regularization that we choose (e.g. $||w||$, $||f||$, $||\partial f||$, $||\partial^2 f||$)
+
+[1]: https://people.eecs.berkeley.edu/~bartlett/courses/281b-sp08/10.pdf
+
+This results in the following formula:
+
+$$\mathbf{w} = (\mathbf{x}^T\mathbf{x}+ \lambda \mathbf{I})^{-1} \mathbf{x}^T \mathbf{y}$$
+
+##### Residual Sum of  Squares (RSS)
+Cost function:
+
+\begin{align}
+\text{C}_{RS}\left(w, \lambda \right) &= ||y-Xw||^2 \\
+\text{C}_{RSS}\left(w, \lambda \right) &= \left( y-Xw \right)^T \left( y-Xw \right) \\
+\text{C}_{RSS}\left(w, \lambda \right) &= y^Ty - 2X^T w^T y + w^T \left( X^T X \right)w
+\end{align}
+
+Derivative of the cost function w.r.t. $w$:
+
+\begin{align}
+\frac{\partial \text{C}_{RSS}\left(w, \lambda \right)}{\partial w} &= - 2X^Ty + 2X^T Xw = 0 \\
+\left( X^T Xw \right) &=  X^Ty \\
+w &= \left( X^T X\right)^{-1} X^Ty
+\end{align}
+
+##### Ridge Regression (RR) - Penalized Sum of Squares
+Cost function:
+
+\begin{align}
+\text{C}_{RR}\left(w, \lambda \right) &= ||y-Xw||^2 + \lambda ||w|| \\
+\text{C}_{RR}\left(w, \lambda \right) &= \left( y-Xw \right)^T \left( y-Xw \right) + \lambda w^T w \\
+\text{C}_{RR}\left(w, \lambda \right) &= y^Ty - 2X^T w^T y + w^T \left( X^T X \right)w + \lambda w^T w
+\end{align}
+
+Derivative of the cost function w.r.t. $w$:
+
+\begin{align}
+\frac{\partial \text{C}_{RSS}\left(w, \lambda \right)}{\partial w} &= 0 - 2X^Ty + 2X^T Xw + 2\lambda w = 0 \\
+\left( X^T Xw + \lambda w \right) &=  X^Ty \\
+w &= \left( X^T X + \lambda I \right)^{-1} X^Ty
+\end{align}
+
+##### Kernel Ridge Regression (KRR)
+
+Let:
+
+* $X=\phi$
+* $w=\phi^T \alpha$
+* $K=\phi^T \phi$
+
+Using the cost function for RR, $w = \left( X^T X + \lambda I \right)^{-1} X^Ty$, we can replace all values with the substitutions from above:
+
+\begin{align}
+\phi^T \alpha &= \left( \phi^T \phi + \lambda I \right)^{-1} \phi^Ty \\
+\alpha &= \left( \phi^T \phi + \lambda I \right)^{-1} y
+\end{align}
+
+
+##### Kernel Ridge Regression w/ Derivative (KRRD) 
+
+Let $f=K\alpha$.
+
+Our Cost function is as follows:
+
+
+\begin{align}
+\text{C}_{KRRD}\left(\alpha, \lambda \right) &= ||y-f||^2 + \lambda ||Df|| \\
+\text{C}_{KRRD}\left(\alpha, \lambda \right) &= \left( y-K\alpha \right)^T \left( y-K\alpha \right) + \lambda \alpha^T \triangledown K^T \triangledown K \alpha \\
+\text{C}_{KRRD}\left(\alpha, \lambda \right) &= y^Ty - 2K^T \alpha^T y + \alpha^T K^T K \alpha + \lambda \alpha^T \triangledown K^T \triangledown K \alpha
+\end{align}
+
+Derivative of the cost function w.r.t. $\alpha$:
+
+\begin{align}
+\frac{\partial \text{C}_{KRRD}\left(\alpha, \lambda \right)}{\partial w} &= - 2K^Ty + 2K^T K\alpha + 2\lambda \triangledown K^T \triangledown K \alpha = 0 \\
+ \left( K^T K \alpha+ \lambda \triangledown K^T \triangledown K \alpha \right) &=  K^Ty \\
+\alpha &=  \left( K^T K + \lambda \triangledown K^T \triangledown K \right)^{-1} K^Ty
+\end{align}
+
+##### Kernel Ridge Regression w/ 2nd Derivative (KRRD2) 
+
+\begin{align}
+\text{C}_{KRRD}\left(\alpha, \lambda \right) &= ||y-f||^2 + \lambda ||D^2f|| \\
+\text{C}_{KRRD}\left(\alpha, \lambda \right) &= \left( y-K\alpha \right)^T \left( y-K\alpha \right) + \lambda \alpha^T \left( \triangledown^2 K \right)^T \triangledown^2 K \alpha \\
+\text{C}_{KRRD}\left(\alpha, \lambda \right) &= y^Ty - 2K^T \alpha^T y + \alpha^T K^T K \alpha + \lambda \alpha^T \left( \triangledown^2 K \right)^T \triangledown^2 K \alpha
+\end{align}
+
+Derivative of the cost function w.r.t. $\alpha$:
+
+\begin{align}
+\frac{\partial \text{C}_{KRRD}\left(\alpha, \lambda \right)}{\partial w} &= - 2K^Ty + 2K^T K\alpha + 2\lambda \left(\triangledown^2 K\right)^T \triangledown^2 K \alpha = 0 \\
+ \left( K^T K \alpha+ \lambda \left(\triangledown^2 K\right)^T \triangledown^2 K \alpha \right) &=  K^Ty \\
+\alpha &=  \left( K^T K + \lambda \left(\triangledown^2 K\right)^T \triangledown^2 K \right)^{-1} K^Ty
+\end{align}
