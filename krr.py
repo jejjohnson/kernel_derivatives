@@ -115,7 +115,7 @@ class KRR(BaseEstimator, RegressorMixin):
                     self.derivative_ = rbf_derivative_cy(x_train=np.int64(self.X_fit_),
                                                       x_function=np.int64(self.X_fit_),
                                                       kernel_mat=np.float64(self.K_),
-                                                      weights=np.float64(temp_weights),
+                                                      weights=np.float64(temp_weights).squeeze(),
                                                       gamma=np.float64(self.gamma),
                                                       n_derivative=1)
                 except ImportError:
@@ -157,7 +157,7 @@ class KRR(BaseEstimator, RegressorMixin):
                     self.derivative2_ = rbf_derivative_cy(x_train=np.int64(self.X_fit_),
                                                       x_function=np.int64(self.X_fit_),
                                                       kernel_mat=np.float64(self.K_),
-                                                      weights=np.float64(temp_weights),
+                                                      weights=np.float64(temp_weights).squeeze(),
                                                       gamma=np.float64(self.gamma),
                                                       n_derivative=2)
                 except ImportError:

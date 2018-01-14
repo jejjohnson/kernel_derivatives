@@ -80,4 +80,4 @@ t1 = time() - t0
 print('\nTime taken for cholesky with functions: {:.4f} secs\n'.format(t1))
 
 # project the data
-y_pred = np.matmul(K_test.T, alpha)
+y_pred = (K_test.T @ alpha).squeeze()
