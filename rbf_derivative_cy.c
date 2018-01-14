@@ -1768,19 +1768,13 @@ static int __Pyx_ValidateAndInit_memviewslice(
                 PyObject *original_obj);
 
 /* ObjectToMemviewSlice.proto */
-static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_dsds_nn___pyx_t_5numpy_int64_t(PyObject *);
+static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_dsds_nn___pyx_t_5numpy_float64_t(PyObject *);
 
 /* ObjectToMemviewSlice.proto */
 static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_5numpy_float64_t(PyObject *);
 
-/* ObjectToMemviewSlice.proto */
-static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_dsds_nn___pyx_t_5numpy_float64_t(PyObject *);
-
 /* CIntToPy.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value);
-
-/* None.proto */
-static CYTHON_INLINE __pyx_t_5numpy_int64_t __Pyx_pow___pyx_t_5numpy_int64_t(__pyx_t_5numpy_int64_t, __pyx_t_5numpy_int64_t);
 
 /* MemviewDtypeToObject.proto */
 static CYTHON_INLINE PyObject *__pyx_memview_get_nn___pyx_t_5numpy_float64_t(const char *itemp);
@@ -2031,7 +2025,6 @@ static void __pyx_memoryview_refcount_objects_in_slice(char *, Py_ssize_t *, Py_
 static void __pyx_memoryview_slice_assign_scalar(__Pyx_memviewslice *, int, size_t, void *, int); /*proto*/
 static void __pyx_memoryview__slice_assign_scalar(char *, Py_ssize_t *, Py_ssize_t *, int, size_t, void *); /*proto*/
 static PyObject *__pyx_unpickle_Enum__set_state(struct __pyx_MemviewEnum_obj *, PyObject *); /*proto*/
-static __Pyx_TypeInfo __Pyx_TypeInfo_nn___pyx_t_5numpy_int64_t = { "int64_t", NULL, sizeof(__pyx_t_5numpy_int64_t), { 0 }, 0, IS_UNSIGNED(__pyx_t_5numpy_int64_t) ? 'U' : 'I', IS_UNSIGNED(__pyx_t_5numpy_int64_t), 0 };
 static __Pyx_TypeInfo __Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t = { "float64_t", NULL, sizeof(__pyx_t_5numpy_float64_t), { 0 }, 0, 'R', 0, 0 };
 #define __Pyx_MODULE_NAME "rbf_derivative_cy"
 extern int __pyx_module_is_main_rbf_derivative_cy;
@@ -2091,6 +2084,7 @@ static const char __pyx_k_reduce[] = "__reduce__";
 static const char __pyx_k_struct[] = "struct";
 static const char __pyx_k_unpack[] = "unpack";
 static const char __pyx_k_update[] = "update";
+static const char __pyx_k_asarray[] = "asarray";
 static const char __pyx_k_fortran[] = "fortran";
 static const char __pyx_k_memview[] = "memview";
 static const char __pyx_k_n_train[] = "n_train";
@@ -2191,6 +2185,7 @@ static PyObject *__pyx_n_s_ValueError;
 static PyObject *__pyx_n_s_View_MemoryView;
 static PyObject *__pyx_n_s_allocate_buffer;
 static PyObject *__pyx_n_s_arange;
+static PyObject *__pyx_n_s_asarray;
 static PyObject *__pyx_n_s_base;
 static PyObject *__pyx_n_s_c;
 static PyObject *__pyx_n_u_c;
@@ -2375,14 +2370,14 @@ static PyObject *__pyx_codeobj__38;
 /* "rbf_derivative_cy.pyx":7
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
- * def rbf_derivative(np.int64_t[:, :] x_train,             # <<<<<<<<<<<<<<
- *                    np.int64_t[:, :] x_function,
+ * def rbf_derivative(np.float64_t[:, :] x_train,             # <<<<<<<<<<<<<<
+ *                    np.float64_t[:, :] x_function,
  *                    np.float64_t[:] weights,
  */
 
 /* Python wrapper */
 static PyObject *__pyx_pw_17rbf_derivative_cy_1rbf_derivative(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_17rbf_derivative_cy_rbf_derivative[] = "This function calculates the rbf derivative using\n    Cython. It has been fairly optimized and provides x100\n    speedup over the original python function.\n    \n    Parameters\n    ----------\n    x_train : array, [N x D], int64\n        The training data used to find the kernel model.\n\n    x_function  : array, [M x D], int64\n        The test points (or vector) to use.\n\n    weights   : array, [N x D], float64\n        The weights found from the kernel model\n            y = K * weights\n\n    kernel_mat: array, [N x M], float64\n        The rbf kernel matrix with the similarities between the test\n        points and the training points.\n\n    n_derivative : int, (default = 1) {1, 2}, int\n        chooses which nth derivative to calculate\n\n    gamma : float, default: None, float64\n        the parameter for the rbf_kernel matrix function\n\n    Returns\n    -------\n\n    derivative : array, [M x D]\n        returns the derivative with respect to training points used in\n        the kernel model and the test points.\n\n    Information\n    -----------\n    Author: Juan Emmanuel Johnson\n    Email : jej2744@rit.edu\n            juan.johnson@uv.es\n    ";
+static char __pyx_doc_17rbf_derivative_cy_rbf_derivative[] = "This function calculates the rbf derivative using\n    Cython. It has been fairly optimized and provides x100\n    speedup over the original python function.\n    \n    Parameters\n    ----------\n    x_train : array, [N x D], float64\n        The training data used to find the kernel model.\n\n    x_function  : array, [M x D], float\n        The test points (or vector) to use.\n\n    weights   : array, [N x D], float64\n        The weights found from the kernel model\n            y = K * weights\n\n    kernel_mat: array, [N x M], float64\n        The rbf kernel matrix with the similarities between the test\n        points and the training points.\n\n    n_derivative : int, (default = 1) {1, 2}, int\n        chooses which nth derivative to calculate\n\n    gamma : float, default: None, float64\n        the parameter for the rbf_kernel matrix function\n\n    Returns\n    -------\n\n    derivative : array, [M x D], float64\n        returns the derivative with respect to training points used in\n        the kernel model and the test points.\n\n    Information\n    -----------\n    Author: Juan Emmanuel Johnson\n    Email : jej2744@rit.edu\n            juan.johnson@uv.es\n    ";
 static PyMethodDef __pyx_mdef_17rbf_derivative_cy_1rbf_derivative = {"rbf_derivative", (PyCFunction)__pyx_pw_17rbf_derivative_cy_1rbf_derivative, METH_VARARGS|METH_KEYWORDS, __pyx_doc_17rbf_derivative_cy_rbf_derivative};
 static PyObject *__pyx_pw_17rbf_derivative_cy_1rbf_derivative(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   __Pyx_memviewslice __pyx_v_x_train = { 0, 0, { 0 }, { 0 }, { 0 } };
@@ -2465,8 +2460,8 @@ static PyObject *__pyx_pw_17rbf_derivative_cy_1rbf_derivative(PyObject *__pyx_se
       values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
       values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
     }
-    __pyx_v_x_train = __Pyx_PyObject_to_MemoryviewSlice_dsds_nn___pyx_t_5numpy_int64_t(values[0]); if (unlikely(!__pyx_v_x_train.memview)) __PYX_ERR(0, 7, __pyx_L3_error)
-    __pyx_v_x_function = __Pyx_PyObject_to_MemoryviewSlice_dsds_nn___pyx_t_5numpy_int64_t(values[1]); if (unlikely(!__pyx_v_x_function.memview)) __PYX_ERR(0, 8, __pyx_L3_error)
+    __pyx_v_x_train = __Pyx_PyObject_to_MemoryviewSlice_dsds_nn___pyx_t_5numpy_float64_t(values[0]); if (unlikely(!__pyx_v_x_train.memview)) __PYX_ERR(0, 7, __pyx_L3_error)
+    __pyx_v_x_function = __Pyx_PyObject_to_MemoryviewSlice_dsds_nn___pyx_t_5numpy_float64_t(values[1]); if (unlikely(!__pyx_v_x_function.memview)) __PYX_ERR(0, 8, __pyx_L3_error)
     __pyx_v_weights = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_5numpy_float64_t(values[2]); if (unlikely(!__pyx_v_weights.memview)) __PYX_ERR(0, 9, __pyx_L3_error)
     __pyx_v_kernel_mat = __Pyx_PyObject_to_MemoryviewSlice_dsds_nn___pyx_t_5numpy_float64_t(values[3]); if (unlikely(!__pyx_v_kernel_mat.memview)) __PYX_ERR(0, 10, __pyx_L3_error)
     __pyx_v_n_derivative = __Pyx_PyInt_As_npy_long(values[4]); if (unlikely((__pyx_v_n_derivative == ((npy_long)-1)) && PyErr_Occurred())) __PYX_ERR(0, 11, __pyx_L3_error)
@@ -3023,7 +3018,7 @@ static PyObject *__pyx_pf_17rbf_derivative_cy_rbf_derivative(CYTHON_UNUSED PyObj
  */
           __pyx_t_23 = __pyx_v_iTest;
           __pyx_t_24 = __pyx_v_idim;
-          *((__pyx_t_5numpy_float64_t *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_derivative.data + __pyx_t_23 * __pyx_v_derivative.strides[0]) ) + __pyx_t_24 * __pyx_v_derivative.strides[1]) )) += (((__pyx_v_theta * (*((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_weights.data + __pyx_t_16 * __pyx_v_weights.strides[0]) )))) * ((*((__pyx_t_5numpy_int64_t *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_x_train.data + __pyx_t_17 * __pyx_v_x_train.strides[0]) ) + __pyx_t_18 * __pyx_v_x_train.strides[1]) ))) - (*((__pyx_t_5numpy_int64_t *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_x_function.data + __pyx_t_19 * __pyx_v_x_function.strides[0]) ) + __pyx_t_20 * __pyx_v_x_function.strides[1]) ))))) * (*((__pyx_t_5numpy_float64_t *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_kernel_mat.data + __pyx_t_21 * __pyx_v_kernel_mat.strides[0]) ) + __pyx_t_22 * __pyx_v_kernel_mat.strides[1]) ))));
+          *((__pyx_t_5numpy_float64_t *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_derivative.data + __pyx_t_23 * __pyx_v_derivative.strides[0]) ) + __pyx_t_24 * __pyx_v_derivative.strides[1]) )) += (((__pyx_v_theta * (*((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_weights.data + __pyx_t_16 * __pyx_v_weights.strides[0]) )))) * ((*((__pyx_t_5numpy_float64_t *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_x_train.data + __pyx_t_17 * __pyx_v_x_train.strides[0]) ) + __pyx_t_18 * __pyx_v_x_train.strides[1]) ))) - (*((__pyx_t_5numpy_float64_t *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_x_function.data + __pyx_t_19 * __pyx_v_x_function.strides[0]) ) + __pyx_t_20 * __pyx_v_x_function.strides[1]) ))))) * (*((__pyx_t_5numpy_float64_t *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_kernel_mat.data + __pyx_t_21 * __pyx_v_kernel_mat.strides[0]) ) + __pyx_t_22 * __pyx_v_kernel_mat.strides[1]) ))));
 
           /* "rbf_derivative_cy.pyx":73
  * 
@@ -3430,7 +3425,7 @@ static PyObject *__pyx_pf_17rbf_derivative_cy_rbf_derivative(CYTHON_UNUSED PyObj
           __pyx_t_34 = __Pyx_PyIndex_AsSsize_t(__pyx_v_dim); if (unlikely((__pyx_t_34 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 92, __pyx_L1_error)
           __pyx_t_35 = __pyx_v_iTest;
           __pyx_t_36 = __pyx_t_34;
-          *((__pyx_t_5numpy_float64_t *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_derivative.data + __pyx_t_35 * __pyx_v_derivative.strides[0]) ) + __pyx_t_36 * __pyx_v_derivative.strides[1]) )) += (((*((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_weights.data + __pyx_t_25 * __pyx_v_weights.strides[0]) ))) * ((pow(__pyx_v_theta, 2.0) * __Pyx_pow___pyx_t_5numpy_int64_t(((*((__pyx_t_5numpy_int64_t *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_x_train.data + __pyx_t_27 * __pyx_v_x_train.strides[0]) ) + __pyx_t_28 * __pyx_v_x_train.strides[1]) ))) - (*((__pyx_t_5numpy_int64_t *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_x_function.data + __pyx_t_30 * __pyx_v_x_function.strides[0]) ) + __pyx_t_31 * __pyx_v_x_function.strides[1]) )))), 2)) - __pyx_v_theta)) * (*((__pyx_t_5numpy_float64_t *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_kernel_mat.data + __pyx_t_32 * __pyx_v_kernel_mat.strides[0]) ) + __pyx_t_33 * __pyx_v_kernel_mat.strides[1]) ))));
+          *((__pyx_t_5numpy_float64_t *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_derivative.data + __pyx_t_35 * __pyx_v_derivative.strides[0]) ) + __pyx_t_36 * __pyx_v_derivative.strides[1]) )) += (((*((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_weights.data + __pyx_t_25 * __pyx_v_weights.strides[0]) ))) * ((pow(__pyx_v_theta, 2.0) * pow(((*((__pyx_t_5numpy_float64_t *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_x_train.data + __pyx_t_27 * __pyx_v_x_train.strides[0]) ) + __pyx_t_28 * __pyx_v_x_train.strides[1]) ))) - (*((__pyx_t_5numpy_float64_t *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_x_function.data + __pyx_t_30 * __pyx_v_x_function.strides[0]) ) + __pyx_t_31 * __pyx_v_x_function.strides[1]) )))), 2.0)) - __pyx_v_theta)) * (*((__pyx_t_5numpy_float64_t *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_kernel_mat.data + __pyx_t_32 * __pyx_v_kernel_mat.strides[0]) ) + __pyx_t_33 * __pyx_v_kernel_mat.strides[1]) ))));
 
           /* "rbf_derivative_cy.pyx":91
  * 
@@ -3477,7 +3472,7 @@ static PyObject *__pyx_pf_17rbf_derivative_cy_rbf_derivative(CYTHON_UNUSED PyObj
  *     else:
  *         raise ValueError('n_derivative should be equal to 1 or 2.')             # <<<<<<<<<<<<<<
  * 
- *     return derivative
+ *     return np.asarray(derivative)
  */
     __pyx_t_4 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple_, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 98, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
@@ -3490,11 +3485,62 @@ static PyObject *__pyx_pf_17rbf_derivative_cy_rbf_derivative(CYTHON_UNUSED PyObj
   /* "rbf_derivative_cy.pyx":100
  *         raise ValueError('n_derivative should be equal to 1 or 2.')
  * 
- *     return derivative             # <<<<<<<<<<<<<<
+ *     return np.asarray(derivative)             # <<<<<<<<<<<<<<
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_4 = __pyx_memoryview_fromslice(__pyx_v_derivative, 2, (PyObject *(*)(char *)) __pyx_memview_get_nn___pyx_t_5numpy_float64_t, (int (*)(char *, PyObject *)) __pyx_memview_set_nn___pyx_t_5numpy_float64_t, 0);; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 100, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 100, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_asarray); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 100, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_v_derivative, 2, (PyObject *(*)(char *)) __pyx_memview_get_nn___pyx_t_5numpy_float64_t, (int (*)(char *, PyObject *)) __pyx_memview_set_nn___pyx_t_5numpy_float64_t, 0);; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 100, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_2 = NULL;
+  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_13))) {
+    __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_13);
+    if (likely(__pyx_t_2)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_13);
+      __Pyx_INCREF(__pyx_t_2);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_13, function);
+    }
+  }
+  if (!__pyx_t_2) {
+    __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_t_13, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 100, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __Pyx_GOTREF(__pyx_t_4);
+  } else {
+    #if CYTHON_FAST_PYCALL
+    if (PyFunction_Check(__pyx_t_13)) {
+      PyObject *__pyx_temp[2] = {__pyx_t_2, __pyx_t_3};
+      __pyx_t_4 = __Pyx_PyFunction_FastCall(__pyx_t_13, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 100, __pyx_L1_error)
+      __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+      __Pyx_GOTREF(__pyx_t_4);
+      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    } else
+    #endif
+    #if CYTHON_FAST_PYCCALL
+    if (__Pyx_PyFastCFunction_Check(__pyx_t_13)) {
+      PyObject *__pyx_temp[2] = {__pyx_t_2, __pyx_t_3};
+      __pyx_t_4 = __Pyx_PyCFunction_FastCall(__pyx_t_13, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 100, __pyx_L1_error)
+      __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+      __Pyx_GOTREF(__pyx_t_4);
+      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    } else
+    #endif
+    {
+      __pyx_t_5 = PyTuple_New(1+1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 100, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_5);
+      __Pyx_GIVEREF(__pyx_t_2); PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_2); __pyx_t_2 = NULL;
+      __Pyx_GIVEREF(__pyx_t_3);
+      PyTuple_SET_ITEM(__pyx_t_5, 0+1, __pyx_t_3);
+      __pyx_t_3 = 0;
+      __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_13, __pyx_t_5, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 100, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_4);
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    }
+  }
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
   __pyx_r = __pyx_t_4;
   __pyx_t_4 = 0;
   goto __pyx_L0;
@@ -3502,8 +3548,8 @@ static PyObject *__pyx_pf_17rbf_derivative_cy_rbf_derivative(CYTHON_UNUSED PyObj
   /* "rbf_derivative_cy.pyx":7
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
- * def rbf_derivative(np.int64_t[:, :] x_train,             # <<<<<<<<<<<<<<
- *                    np.int64_t[:, :] x_function,
+ * def rbf_derivative(np.float64_t[:, :] x_train,             # <<<<<<<<<<<<<<
+ *                    np.float64_t[:, :] x_function,
  *                    np.float64_t[:] weights,
  */
 
@@ -19656,6 +19702,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_View_MemoryView, __pyx_k_View_MemoryView, sizeof(__pyx_k_View_MemoryView), 0, 0, 1, 1},
   {&__pyx_n_s_allocate_buffer, __pyx_k_allocate_buffer, sizeof(__pyx_k_allocate_buffer), 0, 0, 1, 1},
   {&__pyx_n_s_arange, __pyx_k_arange, sizeof(__pyx_k_arange), 0, 0, 1, 1},
+  {&__pyx_n_s_asarray, __pyx_k_asarray, sizeof(__pyx_k_asarray), 0, 0, 1, 1},
   {&__pyx_n_s_base, __pyx_k_base, sizeof(__pyx_k_base), 0, 0, 1, 1},
   {&__pyx_n_s_c, __pyx_k_c, sizeof(__pyx_k_c), 0, 0, 1, 1},
   {&__pyx_n_u_c, __pyx_k_c, sizeof(__pyx_k_c), 0, 1, 0, 1},
@@ -19772,7 +19819,7 @@ static int __Pyx_InitCachedConstants(void) {
  *     else:
  *         raise ValueError('n_derivative should be equal to 1 or 2.')             # <<<<<<<<<<<<<<
  * 
- *     return derivative
+ *     return np.asarray(derivative)
  */
   __pyx_tuple_ = PyTuple_Pack(1, __pyx_kp_s_n_derivative_should_be_equal_to); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 98, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple_);
@@ -20081,8 +20128,8 @@ static int __Pyx_InitCachedConstants(void) {
   /* "rbf_derivative_cy.pyx":7
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
- * def rbf_derivative(np.int64_t[:, :] x_train,             # <<<<<<<<<<<<<<
- *                    np.int64_t[:, :] x_function,
+ * def rbf_derivative(np.float64_t[:, :] x_train,             # <<<<<<<<<<<<<<
+ *                    np.float64_t[:, :] x_function,
  *                    np.float64_t[:] weights,
  */
   __pyx_tuple__30 = PyTuple_Pack(15, __pyx_n_s_x_train, __pyx_n_s_x_function, __pyx_n_s_weights, __pyx_n_s_kernel_mat, __pyx_n_s_n_derivative, __pyx_n_s_gamma, __pyx_n_s_d_dimensions, __pyx_n_s_n_test, __pyx_n_s_n_train, __pyx_n_s_idim, __pyx_n_s_iTest, __pyx_n_s_iTrain, __pyx_n_s_derivative, __pyx_n_s_theta, __pyx_n_s_dim); if (unlikely(!__pyx_tuple__30)) __PYX_ERR(0, 7, __pyx_L1_error)
@@ -20383,8 +20430,8 @@ static int __pyx_pymod_exec_rbf_derivative_cy(PyObject *__pyx_pyinit_module)
   /* "rbf_derivative_cy.pyx":7
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
- * def rbf_derivative(np.int64_t[:, :] x_train,             # <<<<<<<<<<<<<<
- *                    np.int64_t[:, :] x_function,
+ * def rbf_derivative(np.float64_t[:, :] x_train,             # <<<<<<<<<<<<<<
+ *                    np.float64_t[:, :] x_function,
  *                    np.float64_t[:] weights,
  */
   __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_17rbf_derivative_cy_1rbf_derivative, NULL, __pyx_n_s_rbf_derivative_cy); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 7, __pyx_L1_error)
@@ -23231,7 +23278,7 @@ no_fail:
 }
 
 /* ObjectToMemviewSlice */
-      static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_dsds_nn___pyx_t_5numpy_int64_t(PyObject *obj) {
+      static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_dsds_nn___pyx_t_5numpy_float64_t(PyObject *obj) {
     __Pyx_memviewslice result = { 0, 0, { 0 }, { 0 }, { 0 } };
     __Pyx_BufFmt_StackElem stack[1];
     int axes_specs[] = { (__Pyx_MEMVIEW_DIRECT | __Pyx_MEMVIEW_STRIDED), (__Pyx_MEMVIEW_DIRECT | __Pyx_MEMVIEW_STRIDED) };
@@ -23242,7 +23289,7 @@ no_fail:
     }
     retcode = __Pyx_ValidateAndInit_memviewslice(axes_specs, 0,
                                                  PyBUF_RECORDS, 2,
-                                                 &__Pyx_TypeInfo_nn___pyx_t_5numpy_int64_t, stack,
+                                                 &__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t, stack,
                                                  &result, obj);
     if (unlikely(retcode == -1))
         goto __pyx_fail;
@@ -23265,29 +23312,6 @@ __pyx_fail:
     }
     retcode = __Pyx_ValidateAndInit_memviewslice(axes_specs, 0,
                                                  PyBUF_RECORDS, 1,
-                                                 &__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t, stack,
-                                                 &result, obj);
-    if (unlikely(retcode == -1))
-        goto __pyx_fail;
-    return result;
-__pyx_fail:
-    result.memview = NULL;
-    result.data = NULL;
-    return result;
-}
-
-/* ObjectToMemviewSlice */
-      static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_dsds_nn___pyx_t_5numpy_float64_t(PyObject *obj) {
-    __Pyx_memviewslice result = { 0, 0, { 0 }, { 0 }, { 0 } };
-    __Pyx_BufFmt_StackElem stack[1];
-    int axes_specs[] = { (__Pyx_MEMVIEW_DIRECT | __Pyx_MEMVIEW_STRIDED), (__Pyx_MEMVIEW_DIRECT | __Pyx_MEMVIEW_STRIDED) };
-    int retcode;
-    if (obj == Py_None) {
-        result.memview = (struct __pyx_memoryview_obj *) Py_None;
-        return result;
-    }
-    retcode = __Pyx_ValidateAndInit_memviewslice(axes_specs, 0,
-                                                 PyBUF_RECORDS, 2,
                                                  &__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t, stack,
                                                  &result, obj);
     if (unlikely(retcode == -1))
@@ -23350,33 +23374,6 @@ __pyx_fail:
         return _PyLong_FromByteArray(bytes, sizeof(int),
                                      little, !is_unsigned);
     }
-}
-
-/* None */
-      static CYTHON_INLINE __pyx_t_5numpy_int64_t __Pyx_pow___pyx_t_5numpy_int64_t(__pyx_t_5numpy_int64_t b, __pyx_t_5numpy_int64_t e) {
-    __pyx_t_5numpy_int64_t t = b;
-    switch (e) {
-        case 3:
-            t *= b;
-        CYTHON_FALLTHROUGH;
-        case 2:
-            t *= b;
-        CYTHON_FALLTHROUGH;
-        case 1:
-            return t;
-        case 0:
-            return 1;
-    }
-    #if 1
-    if (unlikely(e<0)) return 0;
-    #endif
-    t = 1;
-    while (likely(e)) {
-        t *= (b * (e&1)) | ((~e)&1);
-        b *= b;
-        e >>= 1;
-    }
-    return t;
 }
 
 /* MemviewDtypeToObject */

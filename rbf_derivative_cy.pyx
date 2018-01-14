@@ -4,8 +4,8 @@ cimport numpy as np
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-def rbf_derivative(np.int64_t[:, :] x_train, 
-                   np.int64_t[:, :] x_function,
+def rbf_derivative(np.float64_t[:, :] x_train, 
+                   np.float64_t[:, :] x_function,
                    np.float64_t[:] weights,
                    np.float64_t[:, :] kernel_mat,
                    np.int_t n_derivative,
@@ -16,10 +16,10 @@ def rbf_derivative(np.int64_t[:, :] x_train,
     
     Parameters
     ----------
-    x_train : array, [N x D], int64
+    x_train : array, [N x D], float64
         The training data used to find the kernel model.
 
-    x_function  : array, [M x D], int64
+    x_function  : array, [M x D], float
         The test points (or vector) to use.
 
     weights   : array, [N x D], float64
@@ -39,7 +39,7 @@ def rbf_derivative(np.int64_t[:, :] x_train,
     Returns
     -------
 
-    derivative : array, [M x D]
+    derivative : array, [M x D], float64
         returns the derivative with respect to training points used in
         the kernel model and the test points.
 
@@ -97,4 +97,4 @@ def rbf_derivative(np.int64_t[:, :] x_train,
     else:
         raise ValueError('n_derivative should be equal to 1 or 2.')
                             
-    return derivative
+    return np.asarray(derivative)
