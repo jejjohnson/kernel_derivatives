@@ -11,6 +11,8 @@ from scipy.linalg import cholesky
 import scipy as scio
 from matplotlib import pyplot as plt
 
+    
+
 
 class KRR(BaseEstimator, RegressorMixin):
     """Kernel Ridge Regression with different regularizers.
@@ -38,7 +40,9 @@ class KRR(BaseEstimator, RegressorMixin):
     lam : float, options(default=None)
         the trade-off parameter between the mean squared error
         and the regularization term.
-
+        
+    rbf_solver : 'py', 'cy', optional (default='py')
+        the solver used to calculate the rbf derivative
     Attributes
     ----------
     weights_ : array, [N x D]
@@ -48,11 +52,12 @@ class KRR(BaseEstimator, RegressorMixin):
         the kernel matrix with sigma parameter
     """
 
-    def __init__(self, reg='w', solver='reg', sigma=None, lam=None):
+    def __init__(self, reg='w', solver='reg', sigma=None, lam=None, rbf_solver='py'):
         self.reg = reg
         self.solver = solver
         self.sigma = sigma
         self.lam = lam
+        self.rbf_solver = rbf_solver
 
     def fit(self, x, y=None):
 
@@ -74,8 +79,11 @@ class KRR(BaseEstimator, RegressorMixin):
 
         # check solver
         if self.solver not in ['reg', 'chol']:
-
             raise ValueError('Unrecognized solver. Please chose "chol" or "reg".')
+            
+        # check rbf solver
+        if self.rbf_solver not in ['py', 'cy']:
+            raise ValueError('Unrecognized rbf solver. Please choose "py" or "cy".')
 
         # gamma parameter for the kernel matrix
         self.gamma = 1 / (2 * self.sigma ** 2)
@@ -100,12 +108,34 @@ class KRR(BaseEstimator, RegressorMixin):
             temp_weights = np.ones(self.X_fit_.shape[0])
 
             # calculate the derivative
-            self.derivative_ = rbf_derivative(x_train=self.X_fit_,
-                                              x_function=self.X_fit_,
-                                              kernel_mat=self.K_,
-                                              weights=temp_weights,
-                                              gamma=self.gamma,
-                                              n_derivative=1)
+            if self.rbf_solver == "cy":
+                try:
+
+                    from rbf_derivative_cy import rbf_derivative as rbf_derivative_cy
+                    self.derivative_ = rbf_derivative_cy(x_train=np.int64(self.X_fit_),
+                                                      x_function=np.int64(self.X_fit_),
+                                                      kernel_mat=np.float64(self.K_),
+                                                      weights=np.float64(temp_weights),
+                                                      gamma=np.float64(self.gamma),
+                                                      n_derivative=1)
+                except ImportError:
+
+                    warnings.warn("Chose 'cy' solver but not available.")
+
+                    self.derivative_ = rbf_derivative(x_train=self.X_fit_,
+                                                      x_function=self.X_fit_,
+                                                      kernel_mat=self.K_,
+                                                      weights=temp_weights,
+                                                      gamma=self.gamma,
+                                                      n_derivative=1)
+            elif self.rbf_solver == "py":
+                
+                self.derivative_ = rbf_derivative(x_train=self.X_fit_,
+                                                      x_function=self.X_fit_,
+                                                      kernel_mat=self.K_,
+                                                      weights=temp_weights,
+                                                      gamma=self.gamma,
+                                                      n_derivative=1)
 
             # K * K.T + lambda * Df * Df.T
             mat_A = np.dot(self.K_, self.K_) + self.lam * \
@@ -120,12 +150,34 @@ class KRR(BaseEstimator, RegressorMixin):
             temp_weights = np.ones(self.X_fit_.shape[0])
 
             # calculate the derivative
-            self.derivative2_ = rbf_derivative(x_train=self.X_fit_,
-                                               x_function=self.X_fit_,
-                                               kernel_mat=self.K_,
-                                               weights=temp_weights,
-                                               gamma=self.gamma,
-                                               n_derivative=2)
+            if self.rbf_solver == "cy":
+                try:
+
+                    from rbf_derivative_cy import rbf_derivative as rbf_derivative_cy
+                    self.derivative2_ = rbf_derivative_cy(x_train=np.int64(self.X_fit_),
+                                                      x_function=np.int64(self.X_fit_),
+                                                      kernel_mat=np.float64(self.K_),
+                                                      weights=np.float64(temp_weights),
+                                                      gamma=np.float64(self.gamma),
+                                                      n_derivative=2)
+                except ImportError:
+
+                    warnings.warn("Chose 'cy' solver but not available.")
+
+                    self.derivative2_ = rbf_derivative(x_train=self.X_fit_,
+                                                      x_function=self.X_fit_,
+                                                      kernel_mat=self.K_,
+                                                      weights=temp_weights,
+                                                      gamma=self.gamma,
+                                                      n_derivative=2)
+            elif self.rbf_solver == "py":
+                
+                self.derivative2_ = rbf_derivative(x_train=self.X_fit_,
+                                                      x_function=self.X_fit_,
+                                                      kernel_mat=self.K_,
+                                                      weights=temp_weights,
+                                                      gamma=self.gamma,
+                                                      n_derivative=2)
 
             # K * K.T + lambda * D2f * D2f.T
             mat_A = np.dot(self.K_, self.K_) + self.lam * \
