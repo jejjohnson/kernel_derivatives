@@ -23,13 +23,13 @@ class KRR(BaseEstimator, RegressorMixin):
 
     Parameters
     ----------
-    reg : str, {'w', 'df', 'df2'}
+    reg : str, {'w', 'df', 'df2'}, (default='w')
         the regularization parameter associated with the
         KRR solution
 
         alpha = inv(K + lam * reg) * y
 
-    solver : str, {'reg', 'chol'}
+    solver : str, {'reg', 'chol'}, (default='reg')
         the Ax=b solver used for the weights
 
     sigma : float, optional(default=None)
@@ -41,7 +41,7 @@ class KRR(BaseEstimator, RegressorMixin):
         the trade-off parameter between the mean squared error
         and the regularization term.
         
-    rbf_solver : 'py', 'cy', optional (default='py')
+    rbf_solver : 'py', 'py_mem', cy', optional (default='py')
         the solver used to calculate the rbf derivative
     Attributes
     ----------
@@ -112,12 +112,12 @@ class KRR(BaseEstimator, RegressorMixin):
                 try:
 
                     from rbf_derivative_cy import rbf_derivative as rbf_derivative_cy
-                    self.derivative_ = rbf_derivative_cy(x_train=np.int64(self.X_fit_),
-                                                      x_function=np.int64(self.X_fit_),
-                                                      kernel_mat=np.float64(self.K_),
-                                                      weights=np.float64(temp_weights).squeeze(),
-                                                      gamma=np.float64(self.gamma),
-                                                      n_derivative=1)
+                    self.derivative_ = rbf_derivative_cy(x_train=np.float64(x_train_transformed),
+                                                         x_function=np.float64(x_test_transformed[ibatch_index]),
+                                                         kernel_mat=np.float64(K_traintest),
+                                                         weights=np.float64(KRR_model.dual_coef_).squeeze(),
+                                                         gamma=np.float64(gamma),
+                                                         n_derivative=1)
                 except ImportError:
 
                     warnings.warn("Chose 'cy' solver but not available.")
@@ -131,11 +131,11 @@ class KRR(BaseEstimator, RegressorMixin):
             elif self.rbf_solver == "py":
                 
                 self.derivative_ = rbf_derivative(x_train=self.X_fit_,
-                                                      x_function=self.X_fit_,
-                                                      kernel_mat=self.K_,
-                                                      weights=temp_weights,
-                                                      gamma=self.gamma,
-                                                      n_derivative=1)
+                                                  x_function=self.X_fit_,
+                                                  kernel_mat=self.K_,
+                                                  weights=temp_weights,
+                                                  gamma=self.gamma,
+                                                  n_derivative=2)
 
             # K * K.T + lambda * Df * Df.T
             mat_A = np.dot(self.K_, self.K_) + self.lam * \
@@ -154,12 +154,12 @@ class KRR(BaseEstimator, RegressorMixin):
                 try:
 
                     from rbf_derivative_cy import rbf_derivative as rbf_derivative_cy
-                    self.derivative2_ = rbf_derivative_cy(x_train=np.int64(self.X_fit_),
-                                                      x_function=np.int64(self.X_fit_),
-                                                      kernel_mat=np.float64(self.K_),
-                                                      weights=np.float64(temp_weights).squeeze(),
-                                                      gamma=np.float64(self.gamma),
-                                                      n_derivative=2)
+                    self.derivative2_ = rbf_derivative_cy(x_train=np.float64(x_train_transformed),
+                                                         x_function=np.float64(x_test_transformed[ibatch_index]),
+                                                         kernel_mat=np.float64(K_traintest),
+                                                         weights=np.float64(KRR_model.dual_coef_).squeeze(),
+                                                         gamma=np.float64(gamma),
+                                                         n_derivative=2)
                 except ImportError:
 
                     warnings.warn("Chose 'cy' solver but not available.")
@@ -306,6 +306,73 @@ def rbf_derivative(x_train, x_function, weights, kernel_mat=None,
                                                - theta) * \
                                               kernel_mat[iTrain, iTest]
 
+    return derivative
+
+
+def rbf_derivative_memory(x_train, x_function, kernel_mat,
+                          weights, gamma, n_derivative=1):
+    """This function calculates the rbf derivative using no
+    loops but it requires a large memory load.
+    
+    Parameters
+    ----------
+    x_train : array, [N x D]
+        The training data used to find the kernel model.
+
+    x_function  : array, [M x D]
+        The test points (or vector) to use.
+
+    weights   : array, [N x D]
+        The weights found from the kernel model
+            y = K * weights
+
+    kernel_mat: array, [N x M], default: None
+        The rbf kernel matrix with the similarities between the test
+        points and the training points.
+
+    n_derivative : int, (default = 1) {1, 2}
+        chooses which nth derivative to calculate
+
+    gamma : float, default: None
+        the parameter for the rbf_kernel matrix function
+
+    Returns
+    -------
+
+    derivative : array, [M x D]
+        returns the derivative with respect to training points used in
+        the kernel model and the test points.
+
+    Information
+    -----------
+    Author: Juan Emmanuel Johnson
+    Email : jej2744@rit.edu
+            juan.johnson@uv.es
+    """
+    n_train_samples = x_train.shape[0]
+    n_test_samples = x_function.shape[0]
+    n_dimensions = x_train.shape[1]
+    
+    # create empty derivative matrix
+    derivative = np.empty(shape=(n_train_samples,
+                                 n_test_samples,
+                                 n_dimensions))
+    
+    # create empty block matrices and sum
+    derivative = np.tile(weights[:, np.newaxis, np.newaxis], 
+                           (1, n_test_samples, n_dimensions)) * \
+                      (np.tile(x_function[np.newaxis, :, :],
+                              (n_train_samples, 1, 1)) - \
+                      np.tile(x_train[:, np.newaxis, :], 
+                           (1, n_test_samples, 1))) * \
+                      np.tile(kernel_mat[:, :, np.newaxis], 
+                              (1, 1, n_dimensions))
+    # multiply by the constant
+    derivative *= 2 * gamma**2
+    
+    # sum all of the training samples to get M x N matrix
+    derivative = derivative.sum(axis=0).squeeze()
+    
     return derivative
 
 
