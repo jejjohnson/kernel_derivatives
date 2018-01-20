@@ -11,8 +11,6 @@ from scipy.linalg import cholesky
 import scipy as scio
 from matplotlib import pyplot as plt
 
-    
-
 
 class KRR(BaseEstimator, RegressorMixin):
     """Kernel Ridge Regression with different regularizers.
@@ -26,7 +24,7 @@ class KRR(BaseEstimator, RegressorMixin):
     reg : str, {'w', 'df', 'df2'}, (default='w')
         the regularization parameter associated with the
         KRR solution
-
+        
         alpha = inv(K + lam * reg) * y
 
     solver : str, {'reg', 'chol'}, (default='reg')
@@ -112,12 +110,14 @@ class KRR(BaseEstimator, RegressorMixin):
                 try:
 
                     from rbf_derivative_cy import rbf_derivative as rbf_derivative_cy
-                    self.derivative_ = rbf_derivative_cy(x_train=np.float64(x_train_transformed),
-                                                         x_function=np.float64(x_test_transformed[ibatch_index]),
-                                                         kernel_mat=np.float64(K_traintest),
-                                                         weights=np.float64(KRR_model.dual_coef_).squeeze(),
-                                                         gamma=np.float64(gamma),
-                                                         n_derivative=1)
+                    self.derivative_ = \
+                        rbf_derivative_cy(x_train=np.float64(self.X_fit_),
+                        x_function=np.float64(self.X_fit_),
+                        kernel_mat=np.float64(self.K_),
+                        weights=np.float64(temp_weights).squeeze(),
+                        gamma=np.float64(self.gamma),
+                        n_derivative=1)
+
                 except ImportError:
 
                     warnings.warn("Chose 'cy' solver but not available.")
@@ -421,7 +421,7 @@ def main():
     y_train = y_train - np.mean(y_train)
 
     # initialize the kernel ridge regression model
-    krr_model = KRR(reg='df', solver='chol')
+    krr_model = KRR(reg='df', solver='reg')
 
     # fit model to data
     krr_model.fit(x_train, y_train)
