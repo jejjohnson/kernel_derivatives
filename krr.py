@@ -379,6 +379,7 @@ def main():
     plt.title('Fitted Model')
 
     plt.show()
+    print('testing...')
 
     return None
 
