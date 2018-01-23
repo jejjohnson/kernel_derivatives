@@ -81,3 +81,7 @@ print('\nTime taken for cholesky with functions: {:.4f} secs\n'.format(t1))
 
 # project the data
 y_pred = (K_test.T @ alpha).squeeze()
+
+
+print('Test 2...')
+print('Test on new bramch.')
